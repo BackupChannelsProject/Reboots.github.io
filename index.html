@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reboots Architecture | YouTube Backup</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050507;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-1: #00f2fe;
+            --accent-2: #4facfe;
+            --combo-glow: #8a2be2;
+            --text-main: #f0f0f0;
+            --text-muted: #888890;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 242, 254, 0.04), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(138, 43, 226, 0.04), transparent 25%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        header {
+            padding: 2rem 4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 900;
+            font-size: 2rem;
+            letter-spacing: -1px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Rules Box */
+        .rules-grid {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 2rem;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            text-align: left;
+        }
+
+        .rule-list h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .rule-list.saves h3 { color: #4facfe; }
+        .rule-list.ignores h3 { color: #ff4757; }
+
+        .rule-list ul {
+            list-style: none;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .rule-list li { margin-bottom: 0.5rem; }
+        .rule-list li::before { content: "• "; color: #fff; }
+
+        /* Pricing Cards */
+        .pricing-container {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+        }
+
+        .card {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p.desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            min-height: 40px;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-bottom: auto; /* Pushes content down */
+        }
+
+        .card li {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card li::before {
+            content: "✓";
+            color: var(--accent-1);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .card-combo {
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            background: linear-gradient(180deg, rgba(138, 43, 226, 0.05) 0%, rgba(0, 0, 0, 0) 100%);
+            transform: scale(1.05);
+            z-index: 2;
+        }
+
+        .card-combo:hover {
+            transform: scale(1.05) translateY(-10px);
+            border-color: var(--combo-glow);
+            box-shadow: 0 10px 40px rgba(138, 43, 226, 0.2);
+        }
+
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: linear-gradient(90deg, #8a2be2, #4facfe);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 900px) {
+            .pricing-container { flex-direction: column; align-items: center; }
+            .card { width: 100%; max-width: 400px; }
+            .card-combo { transform: scale(1); }
+            .card-combo:hover { transform: translateY(-10px); }
+            .rules-grid { flex-direction: column; gap: 1.5rem; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Reboots</div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Protect Your Legacy.<br>Automate Your Backup.</h1>
+            <p>A single strike can erase years of work. Reboots Central Engine works in the background to perfectly mirror your content to an offline encrypted drive.</p>
+            
+            <div class="rules-grid">
+                <div class="rule-list saves">
+                    <h3>What We Save</h3>
+                    <ul>
+                        <li>Max available quality (up to 1080p)</li>
+                        <li>Original high-res thumbnails (.jpg)</li>
+                        <li>Full video descriptions & metadata</li>
+                        <li>Both Shorts and regular videos</li>
+                    </ul>
+                </div>
+                <div class="rule-list ignores">
+                    <h3>System Limitations</h3>
+                    <ul>
+                        <li>18+ Age Restricted content</li>
+                        <li>Sponsor-only / Private videos</li>
+                        <li>4K+ resolution (scaled to 1080p)</li>
+                        <li>Already deleted or striked videos</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-container">
+            <!-- Card 1: Archive -->
+            <a href="#payment-archive" class="card">
+                <h2>Full Archive</h2>
+                <p class="desc">A complete snapshot of your channel exactly as it is today.</p>
+                <ul>
+                    <li>Download of every existing public video</li>
+                    <li>Thumbnails & Descriptions included</li>
+                    <li>Organized offline file structure</li>
+                    <li>One-time extraction process</li>
+                </ul>
+            </a>
+
+            <!-- Card 2: Combo -->
+            <a href="#payment-combo" class="card card-combo">
+                <div class="badge">Best Value</div>
+                <h2>The Reboots Combo</h2>
+                <p class="desc">Total peace of mind. Your past is preserved, your future is secured.</p>
+                <ul>
+                    <li><b>Everything in Full Archive</b></li>
+                    <li><b>Everything in Guardian Sub</b></li>
+                    <li>Priority bandwidth allocation</li>
+                    <li>First 10 Beta Testers: Free for life</li>
+                </ul>
+            </a>
+
+            <!-- Card 3: Guardian -->
+            <a href="#payment-guardian" class="card">
+                <h2>Guardian Sub</h2>
+                <p class="desc">Automated monitoring. We catch your new videos the moment they drop.</p>
+                <ul>
+                    <li>24/7 RSS channel monitoring</li>
+                    <li>Auto-download of future uploads</li>
+                    <li>Thumbnails & Descriptions included</li>
+                    <li>Perfect for already archived channels</li>
+                </ul>
+            </a>
+        </section>
+    </main>
+
+</body>
+</html>
